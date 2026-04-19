@@ -14,20 +14,16 @@ MindRelax is a calming Flutter application designed to help users focus, relax, 
 ## 🏗️ Architecture Explanation
 The app follows a clean, feature-first modular architecture to keep the code scalable and easy to read.
 
-2. Folder Structure
+1. Folder Structure
 lib/data/: Contains data models (ambience_model, journal_model) and local database setup.
-
 lib/features/: The core of the app. It is divided by feature rather than by type:
-
 ambience/: Home screen, JSON parsing, and search/filter logic.
-
 player/: The audio player screen, breathing animation, and mini-player widget.
-
 journal/: The reflection screen and history viewer.
-
 assets/: Contains the local JSON file, audio tracks, and images.
 
-2. State Management Approach
+
+3. State Management Approach
 I chose Provider for state management. Since the app requires tracking the audio player state (playing, paused, elapsed time) and updating multiple screens (Player Screen and Mini-Player) simultaneously, Provider offers a simple, reactive, and highly efficient way to manage this without writing boilerplate code.
 
 
