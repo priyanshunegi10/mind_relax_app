@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_relax_app/features/journal/journal_screen.dart';
 import 'package:provider/provider.dart';
 import 'player_provider.dart';
 
@@ -29,6 +30,12 @@ class _PlayerScreenState extends State<PlayerScreen>
         curve: Curves.easeInOutSine,
       ),
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (context.read<PlayerProvider>().isPlaying) {
+        _breathingController.repeat(reverse: true);
+      }
+    });
   }
 
   @override
@@ -62,7 +69,6 @@ class _PlayerScreenState extends State<PlayerScreen>
                 children: [
                   IconButton(
                     icon: const Icon(Icons.keyboard_arrow_down, size: 32),
-
                     onPressed: () => Navigator.pop(context),
                   ),
                   Text(
@@ -125,7 +131,6 @@ class _PlayerScreenState extends State<PlayerScreen>
               padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Column(
                 children: [
-                  // Custom Slider
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: const Color(0xFFD1A490),
@@ -144,13 +149,10 @@ class _PlayerScreenState extends State<PlayerScreen>
                         provider.totalSeconds.toDouble(),
                       ),
                       onChanged: (value) {
-                        // Jaise hi user slider ghumaiga, session time update hoga
                         provider.seekSession(value.toInt());
                       },
                     ),
                   ),
-
-                  // Elapsed Time aur Total Duration
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -176,7 +178,98 @@ class _PlayerScreenState extends State<PlayerScreen>
                 ],
               ),
             ),
-            SizedBox(height: 40),
+
+            const SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close, size: 30, color: Colors.grey),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          title: const Text("End Session?"),
+                          content: const Text(
+                            "Are you sure you want to end this session early?",
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text(
+                                "Cancel",
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFFD1A490),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                                final playedDuration = provider.elapsedSeconds;
+                                final title =
+                                    provider.currentAmbience?.title ??
+                                    "Session";
+                                context
+                                    .read<PlayerProvider>()
+                                    .endSessionComplete();
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => JournalScreen(
+                                      ambienceTitle: title,
+                                      durationListened: playedDuration,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "End",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      provider.togglePlayPause();
+                      if (provider.isPlaying) {
+                        _breathingController.repeat(reverse: true);
+                      } else {
+                        _breathingController.stop();
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD1A490),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        provider.isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: Colors.white,
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 48),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
           ],
         ),
       ),

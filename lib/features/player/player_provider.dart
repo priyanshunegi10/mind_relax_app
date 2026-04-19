@@ -34,31 +34,51 @@ class PlayerProvider extends ChangeNotifier {
       await _audioPlayer.setLoopMode(LoopMode.one);
       _audioPlayer.play();
 
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (_remainingSeconds > 0) {
-          _remainingSeconds--;
-          notifyListeners();
-        } else {
-          endSessionComplete();
-        }
-      });
+      _startTimer(); // Yahan se strict timer shuru
     } catch (e) {
-      if (kDebugMode) {
-        print("Audio loading error: $e");
-      }
-
+      print("Audio loading error: $e");
       stopAndClear();
     }
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_remainingSeconds > 0) {
+        _remainingSeconds--;
+        notifyListeners();
+      } else {
+        endSessionComplete();
+      }
+    });
   }
 
   void togglePlayPause() {
     if (_isPlaying) {
       _audioPlayer.pause();
+      _timer?.cancel();
       _isPlaying = false;
     } else {
       _audioPlayer.play();
+      _startTimer();
       _isPlaying = true;
     }
+    notifyListeners();
+  }
+
+  void seekSession(int seconds) {
+    if (seconds < 0) seconds = 0;
+    if (seconds > totalSeconds) seconds = totalSeconds;
+
+    _remainingSeconds = totalSeconds - seconds;
+    final audioDuration = _audioPlayer.duration;
+    if (audioDuration != null && audioDuration.inSeconds > 0) {
+      final safeSeekPosition = seconds % audioDuration.inSeconds;
+      _audioPlayer.seek(Duration(seconds: safeSeekPosition));
+    } else {
+      _audioPlayer.seek(Duration(seconds: seconds));
+    }
+
     notifyListeners();
   }
 
@@ -71,7 +91,6 @@ class PlayerProvider extends ChangeNotifier {
     await _audioPlayer.stop();
     _isPlaying = false;
     _isSessionActive = false;
-
     notifyListeners();
   }
 
@@ -80,13 +99,5 @@ class PlayerProvider extends ChangeNotifier {
     _timer?.cancel();
     _audioPlayer.dispose();
     super.dispose();
-  }
-
-  void seekSession(int seconds) {
-    if (seconds < 0) seconds = 0;
-    if (seconds > totalSeconds) seconds = totalSeconds;
-
-    _remainingSeconds = totalSeconds - seconds;
-    notifyListeners();
   }
 }

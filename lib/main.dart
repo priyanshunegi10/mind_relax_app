@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mind_relax_app/data/model/journal_model.dart';
 import 'package:mind_relax_app/features/ambience/ambience_provider.dart';
 import 'package:mind_relax_app/features/ambience/home_screen.dart';
 import 'package:mind_relax_app/features/journal/journal_provider.dart';
@@ -10,6 +11,8 @@ import 'package:provider/provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
+  Hive.registerAdapter(JournalEntryAdapter());
+  await Hive.openBox<JournalEntry>('journalBox');
   runApp(
     MultiProvider(
       providers: [

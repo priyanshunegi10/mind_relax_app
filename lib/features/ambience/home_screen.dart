@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mind_relax_app/features/ambience/ambience_provider.dart';
 import 'package:mind_relax_app/features/ambience/details_screen.dart';
+import 'package:mind_relax_app/features/journal/history_screen.dart';
+import 'package:mind_relax_app/features/player/mini_player.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -20,26 +22,45 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    radius: 18,
-                    backgroundColor: Colors.transparent,
-                    backgroundImage: AssetImage("assets/icons/user.png"),
-                  ),
-                  SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(
-                        "For you",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
+                      const CircleAvatar(
+                        radius: 18,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: AssetImage("assets/icons/user.png"),
                       ),
-
-                      Text("Hello priyanshu", style: TextStyle(fontSize: 14)),
+                      const SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text(
+                            "For you",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17,
+                            ),
+                          ),
+                          Text(
+                            "Hello priyanshu",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ],
+                  ),
+
+                  IconButton(
+                    icon: const Icon(Icons.history, color: Color(0xFFD1A490)),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HistoryScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -71,7 +92,6 @@ class HomeScreen extends StatelessWidget {
                 height: 50,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   itemCount: tags.length,
                   itemBuilder: (context, index) {
                     final tag = tags[index];
@@ -110,7 +130,7 @@ class HomeScreen extends StatelessWidget {
                 "Recommended for you",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 15),
               Expanded(
                 child: Consumer<AmbienceProvider>(
                   builder: (context, provider, child) {
@@ -258,6 +278,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: const MiniPlayer(),
     );
   }
 }

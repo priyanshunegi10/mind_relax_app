@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mind_relax_app/data/model/ambience_model.dart';
+import 'package:mind_relax_app/features/player/mini_player.dart';
 import 'package:mind_relax_app/features/player/player_provider.dart';
 import 'package:mind_relax_app/features/player/player_screen.dart';
 import 'package:provider/provider.dart';
@@ -142,6 +143,7 @@ class DetailsScreen extends StatelessWidget {
           ),
         ],
       ),
+      bottomNavigationBar: const MiniPlayer(),
     );
   }
 }
