@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mind_relax_app/data/model/journal_model.dart';
 import 'package:mind_relax_app/features/ambience/ambience_provider.dart';
 import 'package:mind_relax_app/features/ambience/home_screen.dart';
-import 'package:mind_relax_app/features/journal/journal_provider.dart';
+
 import 'package:mind_relax_app/features/player/player_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +17,6 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AmbienceProvider()),
-        ChangeNotifierProvider(create: (_) => JournalProvider()),
         ChangeNotifierProvider(create: (_) => PlayerProvider()),
       ],
       child: const MyApp(),
