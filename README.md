@@ -10,7 +10,14 @@ MindRelax is a calming Flutter application designed to help users focus, relax, 
 2. cd mind_relax_app
 3. flutter pub get
 4. flutter run
-  
+
+## 📸 App Preview & Screenshots
+
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/98351ced-54fa-4f70-a64a-5a20ed915052" width="250" autoplay loop muted playsinline></video>
+</p>
+
+
 ## 🏗️ Architecture Explanation
 The app follows a clean, feature-first modular architecture to keep the code scalable and easy to read.
 
@@ -45,3 +52,6 @@ What would I improve if I had two more days?
 Persistent Audio State: Right now, if the app is completely killed from memory, the session timer resets. With more time, I would save the current elapsedSeconds in Hive so the user can resume exactly where they left off.
 Real Backend Integration: Currently, ambiences are loaded from a local JSON file. I would replace this with a Firebase backend so new audio files can be added without updating the app.
 Advanced Animations: I would convert the current simple breathing ScaleTransition into a more complex CustomPainter animation for a more organic, fluid visual experience.
+
+
+⭐ If you liked this project, don't forget to give it a Star!
